@@ -13,10 +13,10 @@ type ConverterCurrencyControlsProps = {
 const ConverterCurrencyControls = (props: ConverterCurrencyControlsProps) => {
     const {currencyOptions} = useCurrencyStore();
 
-    return (<>
+    return (<div>
         <Input value={props.amount} onChange={e => props.onAmountChange(e.target.value)}/>
         <Dropdown options={currencyOptions} value={props.currency} onChange={props.onCurrencyChange}/>
-    </>)
+    </div>)
 };
 
 export default ConverterCurrencyControls;

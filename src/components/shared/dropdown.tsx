@@ -9,6 +9,10 @@ type DropdownProps = {
 };
 
 const DropdownStyled = styled.select`
+    height: 2rem;
+    border-radius: 0.5rem;
+    border-color: blue;
+    padding: 0 1rem;
 `;
 const Dropdown = (props: DropdownProps) => {
     return <DropdownStyled value={props.value}  onChange={(e) => {props.onChange(e.target.value)}}>
