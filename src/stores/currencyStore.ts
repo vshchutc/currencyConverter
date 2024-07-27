@@ -8,10 +8,11 @@ enum ConvertAmountPropertiesEnum {
     CONVERT_FROM_AMOUNT = 'convertToAmount',
 };
 interface CurrencyState {
+    wereCurrenciesLoaded: boolean;
     currencyOptions: CurrencyOption[],
     loadCurrencyOptions: () => Promise<void>,
     error: string | null;
-    convert: (from: CurrencyCode, to: CurrencyCode, amount: number, currencyToUpdate: s) => Promise<void>,
+    convert: (from: CurrencyCode, to: CurrencyCode, amount: number, currencyToUpdate: 'convertToAmount' | 'convertFromAmount') => Promise<void>,
     convertToCurrency: CurrencyCode | null;
     setConvertToCurrency: (code: CurrencyCode) => void;
     convertFromCurrency: CurrencyCode | null;
@@ -20,30 +21,28 @@ interface CurrencyState {
     setConvertFromAmount: (amount: string) => void;
     convertToAmount: string;
     setConvertToAmount: (amount: string) => void;
-    isLoading: boolean,
 }
 
 const useCurrencyStore = create<CurrencyState>()((set, get) => ({
     currencyOptions: [],
-    isLoading: true,
+    wereCurrenciesLoaded: false,
     loadCurrencyOptions: async () => {
         try {
             const currencyMap = await loadCurrencyList();
             const currencyOptions = currencyMapToCurrencyOptions(currencyMap);
             set({
                 currencyOptions,
-                isLoading: false,
+                wereCurrenciesLoaded: true,
                 convertToCurrency: currencyOptions[0].value,
                 convertFromCurrency: currencyOptions[1].value,
             })
         } catch (err){
             set({
                 error: 'Something went wrong. Please, refresh the page',
-                isLoading: false,
             });
         }
     },
-    convert: async (from: CurrencyCode, to: CurrencyCode, amount: number, currencyToUpdate: 'convertTo'|'convertFrom') => {
+    convert: async (from: CurrencyCode, to: CurrencyCode, amount: number, currencyToUpdate: 'convertToAmount'|'convertFromAmount') => {
         const value = await convert(from, to, amount);
         set({
             [currencyToUpdate]: value.toFixed(2)
