@@ -12,7 +12,7 @@ interface CurrencyState {
     currencyOptions: CurrencyOption[],
     loadCurrencyOptions: () => Promise<void>,
     error: string | null;
-    convert: (from: CurrencyCode, to: CurrencyCode, amount: number, currencyToUpdate: 'convertToAmount' | 'convertFromAmount') => Promise<void>,
+    convert: (from: CurrencyCode, to: CurrencyCode, amount: string, currencyToUpdate: 'convertToAmount' | 'convertFromAmount') => Promise<void>,
     convertToCurrency: CurrencyCode | null;
     setConvertToCurrency: (code: CurrencyCode) => void;
     convertFromCurrency: CurrencyCode | null;
@@ -42,7 +42,7 @@ const useCurrencyStore = create<CurrencyState>()((set, get) => ({
             });
         }
     },
-    convert: async (from: CurrencyCode, to: CurrencyCode, amount: number, currencyToUpdate: 'convertToAmount'|'convertFromAmount') => {
+    convert: async (from: CurrencyCode, to: CurrencyCode, amount: string, currencyToUpdate: 'convertToAmount'|'convertFromAmount') => {
         const value = await convert(from, to, amount);
         set({
             [currencyToUpdate]: value.toFixed(2)
@@ -65,15 +65,13 @@ const useCurrencyStore = create<CurrencyState>()((set, get) => ({
     },
     setConvertToAmount: async(amount: string) => {
         const {convertToCurrency, convertFromCurrency, convert} = get();
-        const amountToFloat = Number.parseFloat(amount.replace(',', '.')).toFixed(2);
-        set({convertToAmount: amountToFloat});
-        convert(convertToCurrency, convertFromCurrency, Number(amountToFloat), 'convertFromAmount');
+        set({convertToAmount: amount});
+        convert(convertToCurrency, convertFromCurrency, Number(amount), 'convertFromAmount');
     },
     setConvertFromAmount: (amount: string) => {
         const {convertToCurrency, convertFromCurrency, convert} = get();
-        const amountFromFloat = Number.parseFloat(amount.replace(',', '.')).toFixed(2);
-        set({convertFromAmount: amountFromFloat});
-        convert(convertFromCurrency, convertToCurrency, Number(amountFromFloat), 'convertToAmount');
+        set({convertFromAmount: amount});
+        convert(convertFromCurrency, convertToCurrency, amount, 'convertToAmount');
     }
 }))
 

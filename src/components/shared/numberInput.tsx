@@ -1,6 +1,5 @@
-import { InputHTMLAttributes, useCallback, useState } from "react";
+import { InputHTMLAttributes } from "react";
 import styled from "styled-components";
-import debounce from "@app/utils/debounce";
 
 const InputStyled = styled.input`
     height: 2rem;
@@ -9,8 +8,17 @@ const InputStyled = styled.input`
     max-width: 4rem;
     margin: 0.5rem;
     box-sizing: border-box;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    &[type=number] {
+        -moz-appearance: textfield;
+    }
 `;
 
 export default (props: InputHTMLAttributes<HTMLInputElement>) => {
-    return <InputStyled {...props}} />
+    return <InputStyled type="number" {...props} />
 }

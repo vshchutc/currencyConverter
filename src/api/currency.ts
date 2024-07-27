@@ -6,7 +6,7 @@ export const loadCurrencyList = async () : Promise<CurrencyMap> => {
     return data;
 }
 
-export const convert = async (from: string, to: string, amount: number) : Promise<number> => {
+export const convert = async (from: string, to: string, amount: string) : Promise<number> => {
     const {data} = await get('/convert', `to=${to}&from=${from}&amount=${amount}`);
     return data.value;
 }
