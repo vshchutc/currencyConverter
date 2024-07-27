@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@app/*": ["src/*"],
+    },
+    "jsx": "react-jsx",
+    "lib": ["es2017"]
+
+  },
+  "include": ["./src/**/*"]
+}

@@ -1,0 +1,81 @@
+import { create } from 'zustand'
+import { loadCurrencyList, convert} from '@app/api/currency';
+import { CurrencyCode, CurrencyOption } from '@app/models/currency';
+import currencyMapToCurrencyOptions from '@app/utils/currencyMapToCurrencyOptions';
+
+enum ConvertAmountPropertiesEnum {
+    CONVERT_TO_AMOUNT = 'convertToAmount',
+    CONVERT_FROM_AMOUNT = 'convertToAmount',
+};
+interface CurrencyState {
+    currencyOptions: CurrencyOption[],
+    loadCurrencyOptions: () => Promise<void>,
+    error: string | null;
+    convert: (from: CurrencyCode, to: CurrencyCode, amount: number, currencyToUpdate: s) => Promise<void>,
+    convertToCurrency: CurrencyCode | null;
+    setConvertToCurrency: (code: CurrencyCode) => void;
+    convertFromCurrency: CurrencyCode | null;
+    setConvertFromCurrency: (code: CurrencyCode) => void;
+    convertFromAmount: string;
+    setConvertFromAmount: (amount: string) => void;
+    convertToAmount: string;
+    setConvertToAmount: (amount: string) => void;
+    isLoading: boolean,
+}
+
+const useCurrencyStore = create<CurrencyState>()((set, get) => ({
+    currencyOptions: [],
+    isLoading: true,
+    loadCurrencyOptions: async () => {
+        try {
+            const currencyMap = await loadCurrencyList();
+            const currencyOptions = currencyMapToCurrencyOptions(currencyMap);
+            set({
+                currencyOptions,
+                isLoading: false,
+                convertToCurrency: currencyOptions[0].value,
+                convertFromCurrency: currencyOptions[1].value,
+            })
+        } catch (err){
+            set({
+                error: 'Something went wrong. Please, refresh the page',
+                isLoading: false,
+            });
+        }
+    },
+    convert: async (from: CurrencyCode, to: CurrencyCode, amount: number, currencyToUpdate: 'convertTo'|'convertFrom') => {
+        const value = await convert(from, to, amount);
+        set({
+            [currencyToUpdate]: value.toFixed(2)
+        })
+    },
+    convertToCurrency: null,
+    convertFromCurrency: null,
+    convertToAmount: '0.00',
+    convertFromAmount: '0.00',
+    error: null,
+    setConvertToCurrency: (code: CurrencyCode) => {
+        const {convertToAmount, convertFromCurrency, convert} = get();
+        set({convertToCurrency: code});
+        convert(code, convertFromCurrency, Number(convertToAmount), 'convertFromAmount');
+    },
+    setConvertFromCurrency: (code: CurrencyCode) => {
+        const {convertFromAmount, convertToCurrency, convert} = get();
+        set({convertFromCurrency: code});
+        convert(code, convertToCurrency, Number(convertFromAmount), 'convertToAmount');
+    },
+    setConvertToAmount: async(amount: string) => {
+        const {convertToCurrency, convertFromCurrency, convert} = get();
+        const amountToFloat = Number.parseFloat(amount.replace(',', '.')).toFixed(2);
+        set({convertToAmount: amountToFloat});
+        convert(convertToCurrency, convertFromCurrency, Number(amountToFloat), 'convertFromAmount');
+    },
+    setConvertFromAmount: (amount: string) => {
+        const {convertToCurrency, convertFromCurrency, convert} = get();
+        const amountFromFloat = Number.parseFloat(amount.replace(',', '.')).toFixed(2);
+        set({convertFromAmount: amountFromFloat});
+        convert(convertFromCurrency, convertToCurrency, Number(amountFromFloat), 'convertToAmount');
+    }
+}))
+
+export default useCurrencyStore;
