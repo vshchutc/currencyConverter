@@ -56,19 +56,20 @@ const useCurrencyStore = create<CurrencyState>()((set, get) => ({
     setConvertToCurrency: (code: CurrencyCode) => {
         const {convertToAmount, convertFromCurrency, convert} = get();
         set({convertToCurrency: code});
-        convert(code, convertFromCurrency, Number(convertToAmount), 'convertFromAmount');
+        convert(code, convertFromCurrency, convertToAmount, 'convertFromAmount');
     },
     setConvertFromCurrency: (code: CurrencyCode) => {
         const {convertFromAmount, convertToCurrency, convert} = get();
         set({convertFromCurrency: code});
-        convert(code, convertToCurrency, Number(convertFromAmount), 'convertToAmount');
+        convert(code, convertToCurrency, convertFromAmount, 'convertToAmount');
     },
     setConvertToAmount: async(amount: string) => {
         const {convertToCurrency, convertFromCurrency, convert} = get();
         set({convertToAmount: amount});
-        convert(convertToCurrency, convertFromCurrency, Number(amount), 'convertFromAmount');
+        convert(convertToCurrency, convertFromCurrency, amount, 'convertFromAmount');
     },
     setConvertFromAmount: (amount: string) => {
+        debugger
         const {convertToCurrency, convertFromCurrency, convert} = get();
         set({convertFromAmount: amount});
         convert(convertFromCurrency, convertToCurrency, amount, 'convertToAmount');
