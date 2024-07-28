@@ -19,17 +19,29 @@ const InputStyled = styled.input`
     }
 `;
 
-export default (props: Omit<InputHTMLAttributes<HTMLInputElement>, 'onBlur'> & {onBlur: (value: string) => void;}) => {
+export default (props: InputHTMLAttributes<HTMLInputElement> & {processNewValue: (value: string) => void;}) => {
+    const {value, processNewValue, ...rest} = props;
     const [tempValue, setTempValue] = useState(props.value);
+
     const handleChange = useCallback((e) => {
-        setTempValue(e.target.value)
-    }, [setTempValue]);
+        const regexValidForConversion = /^(?:[.,])?\d+(?:,\d{3})*(?:[.,]\d+)?$/;
+        const regexValidForInput = /^(|[.,]|\d+[.,])?$/;
+        const {value: targetValue} = e.target;
+        if(regexValidForConversion.test(targetValue)){
+            processNewValue(targetValue)
+            setTempValue(value)
+        } else if (regexValidForInput.test(targetValue)) {
+            setTempValue(targetValue)
+        }
+    }, [setTempValue, processNewValue]);
+
     useEffect(() => {
         setTempValue(props.value)
     }, [props.value]);
-    const handleBlur = useCallback(e => {
-        const value = Math.abs(Number.parseFloat(e.target.value || 0)).toFixed(2);
-        props.onBlur(value);
-    }, [props.onBlur])
-    return <InputStyled type="number" {...props} onChange={handleChange} value={tempValue} onBlur={handleBlur}/>
+    
+    return (<InputStyled
+        onChange={handleChange}
+        value={tempValue}
+        {...rest}
+    />);
 }
