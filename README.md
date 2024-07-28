@@ -2,6 +2,8 @@
 
 Vite + React + Zustand + Typescript + styled-components
 
+The app works as Google currency converter.
+
 # How to install the app:
 
 once the code is downloaded,
