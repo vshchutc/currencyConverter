@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { loadCurrencyList, convert} from '@app/api/currency';
+import { loadCurrencyList, convert} from '@app/api/converter';
 import { CurrencyCode, CurrencyOption } from '@app/models/currency';
 import currencyMapToCurrencyOptions from '@app/utils/currencyMapToCurrencyOptions';
 
