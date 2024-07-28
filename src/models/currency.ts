@@ -20,5 +20,5 @@ export type CurrencyCode = CurrencyMap[keyof CurrencyMap]['short_code']
 export interface CurrencyOption {
     value: CurrencyCode;
     label: string,
-    id: string,
+    id: CurrencyMap[keyof CurrencyMap]['id'],
 }

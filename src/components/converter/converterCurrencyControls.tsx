@@ -15,7 +15,7 @@ const ConverterCurrencyControls = (props: ConverterCurrencyControlsProps) => {
     return (<div>
         <CurrencyInput
             value={props.amount}
-            processNewValue={props.onAmountChange}
+            onValidChange={props.onAmountChange}
         />
         <Dropdown
             options={currencyOptions}

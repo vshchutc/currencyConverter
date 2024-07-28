@@ -56,7 +56,7 @@ const useCurrencyStore = create<CurrencyState>()((set, get) => ({
         try {
             const {currencyACode, currencyBCode} = get();
             set({currencyASum: sumToConvert, currencyBSum: ''});
-            const value = await convert(currencyACode, currencyBCode, sumToConvert);
+            const value = await convert({to: currencyACode, from: currencyBCode, amount: sumToConvert});
             set({currencyBSum: value.toFixed(2)})
         } catch (err){
             set({
@@ -68,7 +68,7 @@ const useCurrencyStore = create<CurrencyState>()((set, get) => ({
         try {
             const {currencyACode, currencyBCode} = get();
             set({currencyBSum: sumToConvert, currencyASum: ''});
-            const value = await convert(currencyBCode, currencyACode, sumToConvert);
+            const value = await convert({to: currencyACode, from: currencyBCode, amount: sumToConvert});
             set({currencyASum: value.toFixed(2)})
         } catch (err){
             set({

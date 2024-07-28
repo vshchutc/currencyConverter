@@ -1,3 +1,4 @@
+import { isValidCurrencyFormat, isValidCurrencyInputValue } from "@app/utils/currencyInputValidators.ts";
 import { InputHTMLAttributes, useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -10,21 +11,19 @@ const InputStyled = styled.input`
     box-sizing: border-box;
 `;
 
-const CurrencyInput = (props: InputHTMLAttributes<HTMLInputElement> & {processNewValue: (value: string) => void;}) => {
-    const {value, processNewValue, ...rest} = props;
+const CurrencyInput = (props: InputHTMLAttributes<HTMLInputElement> & {onValidChange: (value: string) => void;}) => {
+    const {value, onValidChange, ...rest} = props;
     const [tempValue, setTempValue] = useState(props.value);
 
     const handleChange = useCallback((e) => {
-        const regexValidForConversion = /^(?:[.])?\d+(?:\d{3})*(?:[.]\d+)?$/;
-        const regexValidForInput = /^(|[.]|\d+[.])?$/;
         const {value: targetValue} = e.target;
-        if(regexValidForConversion.test(targetValue)){
-            processNewValue(targetValue)
+        if(isValidCurrencyFormat(targetValue)){
+            onValidChange(targetValue)
             setTempValue(value)
-        } else if (regexValidForInput.test(targetValue)) {
+        } else if (isValidCurrencyInputValue(targetValue)) {
             setTempValue(targetValue)
         }
-    }, [setTempValue, processNewValue, value]);
+    }, [setTempValue, onValidChange, value]);
 
     useEffect(() => {
         setTempValue(props.value)
