@@ -8,15 +8,6 @@ const InputStyled = styled.input`
     max-width: 4rem;
     margin: 0.5rem;
     box-sizing: border-box;
-
-    &::-webkit-outer-spin-button,
-    &::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-    &[type=number] {
-        -moz-appearance: textfield;
-    }
 `;
 
 export default (props: InputHTMLAttributes<HTMLInputElement> & {processNewValue: (value: string) => void;}) => {
@@ -24,8 +15,8 @@ export default (props: InputHTMLAttributes<HTMLInputElement> & {processNewValue:
     const [tempValue, setTempValue] = useState(props.value);
 
     const handleChange = useCallback((e) => {
-        const regexValidForConversion = /^(?:[.,])?\d+(?:,\d{3})*(?:[.,]\d+)?$/;
-        const regexValidForInput = /^(|[.,]|\d+[.,])?$/;
+        const regexValidForConversion = /^(?:[.])?\d+(?:\d{3})*(?:[.]\d+)?$/;
+        const regexValidForInput = /^(|[.]|\d+[.])?$/;
         const {value: targetValue} = e.target;
         if(regexValidForConversion.test(targetValue)){
             processNewValue(targetValue)

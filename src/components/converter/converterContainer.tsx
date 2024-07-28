@@ -1,6 +1,6 @@
 import useCurrencyStore from '@app/stores/currencyStore';
 import {useEffect, useCallback} from 'react';
-import ConverterCurrencyControls from './converterCurrencyControls';
+import ConverterCurrencyControls from '@app/components/converter/converterCurrencyControls';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -24,7 +24,19 @@ const InfoWrapper = styled.div`
     margin: 0 1rem;
 `;
 const ConverterContainer = () => {
-    const {error, loadCurrencyOptions, wereCurrenciesLoaded, setConvertFromCurrency, convertFromAmount,convertToAmount, convertFromCurrency, convertToCurrency, setConvertToCurrency,setConvertFromAmount, setConvertToAmount} = useCurrencyStore();
+    const {
+        error, 
+        loadCurrencyOptions,
+        wereCurrenciesLoaded,
+        setCurrencyACode,
+        currencyASum,
+        currencyBSum,
+        currencyACode,
+        currencyBCode,
+        setCurrencyBCode,
+        performCurrencyAConversion,
+        performCurrencyBConversion,
+    } = useCurrencyStore();
     const getCurrencyOptions = useCallback(async () => {
         await loadCurrencyOptions();
     }, []);
@@ -38,11 +50,21 @@ const ConverterContainer = () => {
     return (<Container>
         {wereCurrenciesLoaded
             ? <ControlsWrapper>
-        <ConverterCurrencyControls onAmountChange={setConvertFromAmount} currency={convertFromCurrency} amount={convertFromAmount.toString() } onCurrencyChange={setConvertFromCurrency}/>
-        <InfoWrapper>is equal to</InfoWrapper>
-        <ConverterCurrencyControls onAmountChange={setConvertToAmount} currency={convertToCurrency} amount={convertToAmount.toString() } onCurrencyChange={setConvertToCurrency}/>
-</ControlsWrapper> : 'Loading'}
-        
+                <ConverterCurrencyControls
+                    onAmountChange={performCurrencyAConversion}
+                    currency={currencyACode}
+                    amount={currencyASum}
+                    onCurrencyChange={setCurrencyACode}
+                />
+                <InfoWrapper>is equal to</InfoWrapper>
+                <ConverterCurrencyControls
+                    onAmountChange={performCurrencyBConversion}
+                    currency={currencyBCode}
+                    amount={currencyBSum}
+                    onCurrencyChange={setCurrencyBCode}
+                />
+            </ControlsWrapper>
+        : 'Loading'}
     </Container>)
 };
 

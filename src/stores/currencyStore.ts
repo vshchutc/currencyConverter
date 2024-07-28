@@ -3,24 +3,19 @@ import { loadCurrencyList, convert} from '@app/api/currency';
 import { CurrencyCode, CurrencyOption } from '@app/models/currency';
 import currencyMapToCurrencyOptions from '@app/utils/currencyMapToCurrencyOptions';
 
-enum ConvertAmountPropertiesEnum {
-    CONVERT_TO_AMOUNT = 'convertToAmount',
-    CONVERT_FROM_AMOUNT = 'convertToAmount',
-};
 interface CurrencyState {
     wereCurrenciesLoaded: boolean;
     currencyOptions: CurrencyOption[],
     loadCurrencyOptions: () => Promise<void>,
     error: string | null;
-    convert: (from: CurrencyCode, to: CurrencyCode, amount: string, currencyToUpdate: 'convertToAmount' | 'convertFromAmount') => Promise<void>,
-    convertToCurrency: CurrencyCode | null;
-    setConvertToCurrency: (code: CurrencyCode) => void;
-    convertFromCurrency: CurrencyCode | null;
-    setConvertFromCurrency: (code: CurrencyCode) => void;
-    convertFromAmount: string;
-    setConvertFromAmount: (amount: string) => void;
-    convertToAmount: string;
-    setConvertToAmount: (amount: string) => void;
+    currencyBCode: CurrencyCode | null;
+    setCurrencyBCode: (code: CurrencyCode) => void;
+    currencyACode: CurrencyCode | null;
+    setCurrencyACode: (code: CurrencyCode) => void;
+    currencyASum: string;
+    currencyBSum: string;
+    performCurrencyAConversion: (sumToConvert: string) => Promise<void>;
+    performCurrencyBConversion: (sumToConvert: string) => Promise<void>;
 }
 
 const useCurrencyStore = create<CurrencyState>()((set, get) => ({
@@ -33,8 +28,8 @@ const useCurrencyStore = create<CurrencyState>()((set, get) => ({
             set({
                 currencyOptions,
                 wereCurrenciesLoaded: true,
-                convertToCurrency: currencyOptions[0].value,
-                convertFromCurrency: currencyOptions[1].value,
+                currencyBCode: currencyOptions[0].value,
+                currencyACode: currencyOptions[1].value,
             })
         } catch (err){
             set({
@@ -42,37 +37,32 @@ const useCurrencyStore = create<CurrencyState>()((set, get) => ({
             });
         }
     },
-    convert: async (from: CurrencyCode, to: CurrencyCode, amount: string, currencyToUpdate: 'convertToAmount'|'convertFromAmount') => {
-        const value = await convert(from, to, amount);
-        set({
-            [currencyToUpdate]: value.toFixed(2)
-        })
-    },
-    convertToCurrency: null,
-    convertFromCurrency: null,
-    convertToAmount: '0.00',
-    convertFromAmount: '0.00',
+    currencyBCode: null,
+    currencyACode: null,
+    currencyBSum: '0.00',
+    currencyASum: '0.00',
     error: null,
-    setConvertToCurrency: (code: CurrencyCode) => {
-        const {convertToAmount, convertFromCurrency, convert} = get();
-        set({convertToCurrency: code});
-        convert(code, convertFromCurrency, convertToAmount, 'convertFromAmount');
+    setCurrencyBCode: (code: CurrencyCode) => {
+        const {currencyBSum, performCurrencyBConversion} = get();
+        set({currencyBCode: code});
+        performCurrencyBConversion(currencyBSum);
     },
-    setConvertFromCurrency: (code: CurrencyCode) => {
-        const {convertFromAmount, convertToCurrency, convert} = get();
-        set({convertFromCurrency: code});
-        convert(code, convertToCurrency, convertFromAmount, 'convertToAmount');
+    setCurrencyACode: (code: CurrencyCode) => {
+        const {currencyASum, performCurrencyAConversion} = get();
+        set({currencyACode: code});
+        performCurrencyAConversion(currencyASum);
     },
-    setConvertToAmount: async(amount: string) => {
-        const {convertToCurrency, convertFromCurrency, convert} = get();
-        set({convertToAmount: amount});
-        convert(convertToCurrency, convertFromCurrency, amount, 'convertFromAmount');
+    performCurrencyAConversion: async (sumToConvert: string) => {
+        const {currencyACode, currencyBCode} = get();
+        set({currencyASum: sumToConvert, currencyBSum: ''});
+        const value = await convert(currencyACode, currencyBCode, sumToConvert);
+        set({currencyBSum: value.toFixed(2)})
     },
-    setConvertFromAmount: (amount: string) => {
-        debugger
-        const {convertToCurrency, convertFromCurrency, convert} = get();
-        set({convertFromAmount: amount});
-        convert(convertFromCurrency, convertToCurrency, amount, 'convertToAmount');
+    performCurrencyBConversion: async (sumToConvert: string) => {
+        const {currencyACode, currencyBCode} = get();
+        set({currencyBSum: sumToConvert, currencyASum: ''});
+        const value = await convert(currencyBCode, currencyACode, sumToConvert);
+        set({currencyASum: value.toFixed(2)})
     }
 }))
 
