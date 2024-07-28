@@ -15,9 +15,11 @@ open the terminal from the repo folder and run:
 
 ## Components
  - converter:
- files related, to converter feature, if new features will be added, new folders with descriptive names will be created;
+ files related, to converter feature
  - shared:
  agnostic reusable components;
+
+ if new features will be added, new folders with descriptive names will be created;
 
  ## models
  currently only for currency data
