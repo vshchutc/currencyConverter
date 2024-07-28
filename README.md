@@ -1,30 +1,30 @@
-# React + TypeScript + Vite
+# Application technologies:
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Vite + React + Zustand + Typescript + styled-components
 
-Currently, two official plugins are available:
+# How to install the app:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+once the code is downloaded,
+open the terminal from the repo folder and run:
+``npm i``
+``npm run dev``
 
-## Expanding the ESLint configuration
+# Application architecture:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Components
+ - converter:
+ files related, to converter feature, if new features will be added, new folders with descriptive names will be created;
+ - shared:
+ agnostic reusable components;
 
-- Configure the top-level `parserOptions` property like this:
+ ## models
+ currently only for currency data
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+ ## stores
+ currently only for currency data. All logic is here and in utils - it is easier to test it separately from components; it is also doos idea to manage data flow in zustand - it is lightweight and helps to avoid prop drilling and reduces rerenders;
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+ currently there are 2 currencies and quite similar functions to convert them;
+ if there will be possibilities
+
+ ## utils
+ data transform and data validation, separated here for easier tests in the future
