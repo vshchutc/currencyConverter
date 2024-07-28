@@ -1,7 +1,6 @@
 import styled from "styled-components";
-import Input from "./input";
-import { CurrencyCode } from "@app/models/currency";
 export type DropdownOption = {value: string, label: string, id: string | number};
+
 type DropdownProps = {
     options: DropdownOption[],
     onChange: (value: string) => void,

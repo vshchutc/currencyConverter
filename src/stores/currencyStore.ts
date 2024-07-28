@@ -53,16 +53,28 @@ const useCurrencyStore = create<CurrencyState>()((set, get) => ({
         performCurrencyAConversion(currencyASum);
     },
     performCurrencyAConversion: async (sumToConvert: string) => {
-        const {currencyACode, currencyBCode} = get();
-        set({currencyASum: sumToConvert, currencyBSum: ''});
-        const value = await convert(currencyACode, currencyBCode, sumToConvert);
-        set({currencyBSum: value.toFixed(2)})
+        try {
+            const {currencyACode, currencyBCode} = get();
+            set({currencyASum: sumToConvert, currencyBSum: ''});
+            const value = await convert(currencyACode, currencyBCode, sumToConvert);
+            set({currencyBSum: value.toFixed(2)})
+        } catch (err){
+            set({
+                error: 'Something went wrong. Unable to convert. Please, refresh the page',
+            });
+        }
     },
     performCurrencyBConversion: async (sumToConvert: string) => {
-        const {currencyACode, currencyBCode} = get();
-        set({currencyBSum: sumToConvert, currencyASum: ''});
-        const value = await convert(currencyBCode, currencyACode, sumToConvert);
-        set({currencyASum: value.toFixed(2)})
+        try {
+            const {currencyACode, currencyBCode} = get();
+            set({currencyBSum: sumToConvert, currencyASum: ''});
+            const value = await convert(currencyBCode, currencyACode, sumToConvert);
+            set({currencyASum: value.toFixed(2)})
+        } catch (err){
+            set({
+                error: 'Something went wrong. Unable to convert. Please, refresh the page',
+            });
+        }
     }
 }))
 
