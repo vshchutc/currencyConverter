@@ -13,12 +13,11 @@ open the terminal from the repo folder and run:
 
 # Application architecture:
 
-##API
-
+## API
  -- base:
- the wrapper for api calls, where we update requests with global data or environment variables
+ the wrapper for api calls, where we update requests with global data or environment variables.
  -- converter:
- converter related api;
+ converter related api.
 
 ## Components
  - converter:
