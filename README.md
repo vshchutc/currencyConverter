@@ -26,10 +26,9 @@ open the terminal from the repo folder and run:
 
  ## stores
 Currently only for currency data. All logic is here and in utils - it is easier to test it separately from components.
-I also consider it a good idea to manage data flow in zustand - it is lightweight and helps to avoid prop drilling and reduces rerenders;
+I also consider it a good idea to manage data flow in zustand - it is lightweight and helps to avoid prop drilling and reduces rerenders.
 
- currently there are 2 currencies and quite similar functions to convert them;
- if there will be possibilities
+Currently there are 2 currencies and quite similar functions to convert them.
 
  ## utils
  data transform and data validation, separated here for easier tests in the future
