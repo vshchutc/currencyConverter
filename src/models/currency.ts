@@ -15,10 +15,10 @@ export type CurrencyMap = {
     [key: string]: CurrencyData;
 };
   
-export type CurrencyCode = CurrencyMap[keyof CurrencyMap]['short_code'];
+export type CurrencyCode = CurrencyMap[keyof CurrencyMap]['short_code']
 
 export interface CurrencyOption {
     value: CurrencyCode;
     label: string,
     id: string,
-};
+}

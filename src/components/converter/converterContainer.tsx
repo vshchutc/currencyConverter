@@ -39,11 +39,11 @@ const ConverterContainer = () => {
     } = useCurrencyStore();
     const getCurrencyOptions = useCallback(async () => {
         await loadCurrencyOptions();
-    }, []);
+    }, [loadCurrencyOptions]);
 
     useEffect(() => {
         getCurrencyOptions();
-    }, [])
+    }, [getCurrencyOptions])
     if (error){
         return <Container>{error}</Container>
     }

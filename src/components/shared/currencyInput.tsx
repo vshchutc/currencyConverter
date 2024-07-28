@@ -10,7 +10,7 @@ const InputStyled = styled.input`
     box-sizing: border-box;
 `;
 
-export default (props: InputHTMLAttributes<HTMLInputElement> & {processNewValue: (value: string) => void;}) => {
+const CurrencyInput = (props: InputHTMLAttributes<HTMLInputElement> & {processNewValue: (value: string) => void;}) => {
     const {value, processNewValue, ...rest} = props;
     const [tempValue, setTempValue] = useState(props.value);
 
@@ -24,7 +24,7 @@ export default (props: InputHTMLAttributes<HTMLInputElement> & {processNewValue:
         } else if (regexValidForInput.test(targetValue)) {
             setTempValue(targetValue)
         }
-    }, [setTempValue, processNewValue]);
+    }, [setTempValue, processNewValue, value]);
 
     useEffect(() => {
         setTempValue(props.value)
@@ -35,4 +35,6 @@ export default (props: InputHTMLAttributes<HTMLInputElement> & {processNewValue:
         value={tempValue}
         {...rest}
     />);
-}
+};
+
+export default CurrencyInput;
